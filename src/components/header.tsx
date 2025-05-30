@@ -13,7 +13,7 @@ export default function Header() {
     {
       title: '회사소개',
       dropdownItems: [
-        { label: '경영철학', href: '#philosophy' },
+        { label: '경영철학', href: '/main/philosophy' },
         { label: 'CEO', href: '#ceo' },
         { label: 'History', href: '#history' },
         { label: '관계사', href: '#group' },
