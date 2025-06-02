@@ -3,34 +3,50 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import NavItemWithDropdown from './NavItemWithDropdown';
+import { usePathname } from 'next/navigation';
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState(0);
   const sectionCount = 6;
+  const pathname = usePathname();
 
   const menuItems = [
     {
       title: '회사소개',
       dropdownItems: [
-        { label: '경영철학', href: '/main/philosophy' },
-        { label: 'CEO', href: '#ceo' },
-        { label: 'History', href: '#history' },
-        { label: '관계사', href: '#group' },
+        { label: '회사소개', href: '/about#about' },
+    { label: '오시는 길', href: '/about#map' },
       ],
     },
-    { title: '컨설팅', href: '#consulting' },
-    { title: '디지털전환', href: '#digital' },
-    { title: '인재채용', href: '#recruit' },
-    { title: '공고', href: '#notice' },
+    {
+      title: '기술 소개',
+      
+      dropdownItems: [
+        { label: 'LAWEE 소개', href: '/technology#intro' },
+    { label: '주요 기능', href: '/technology#features' },
+    { label: '특화 기술', href: '/technology#technology' },
+    { label: '도입 안내', href: '/technology#guide' },
+    { label: '제휴 안내', href: '/technology#partner' },
+      ],
+    },
+    {
+      title: '특허 및 인증',
+      href: '/main/patent',
+    },
   ];
 
   useEffect(() => {
+    if (pathname !== '/main') return;
+
     const handleScroll = () => {
       const sections = document.querySelectorAll('section');
       const scrollPosition = window.scrollY + window.innerHeight / 2;
       sections.forEach((section, index) => {
-        if (section.offsetTop <= scrollPosition && section.offsetTop + section.clientHeight > scrollPosition) {
+        if (
+          section.offsetTop <= scrollPosition &&
+          section.offsetTop + section.clientHeight > scrollPosition
+        ) {
           setActiveSection(index);
         }
       });
@@ -38,7 +54,7 @@ export default function Header() {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [pathname]);
 
   const scrollToSection = (index: number) => {
     const section = document.querySelectorAll('section')[index];
@@ -116,19 +132,21 @@ export default function Header() {
         </div>
       )}
 
-      {/* 섹션 인디케이터 */}
-      <div className="fixed left-4 top-1/3 z-40 hidden md:flex flex-col items-center gap-4">
-        {Array.from({ length: sectionCount }).map((_, i) => (
-          <button
-            key={i}
-            title={`Section ${i + 1}`}
-            onClick={() => scrollToSection(i)}
-            className={`w-3 h-3 rounded-full border-2 transition-colors duration-200 ${
-              activeSection === i ? 'bg-blue-600 border-blue-600' : 'bg-white border-gray-400'
-            }`}
-          ></button>
-        ))}
-      </div>
+      {/* section 인디케이터: /main 에서만 보임 */}
+      {pathname === '/main' && (
+        <div className="fixed left-4 top-1/3 z-40 hidden md:flex flex-col items-center gap-4">
+          {Array.from({ length: sectionCount }).map((_, i) => (
+            <button
+              key={i}
+              title={`Section ${i + 1}`}
+              onClick={() => scrollToSection(i)}
+              className={`w-3 h-3 rounded-full border-2 transition-colors duration-200 ${
+                activeSection === i ? 'bg-blue-600 border-blue-600' : 'bg-white border-gray-400'
+              }`}
+            ></button>
+          ))}
+        </div>
+      )}
     </header>
   );
 }

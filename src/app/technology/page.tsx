@@ -1,20 +1,20 @@
-// ✅ src/app/main/page.tsx
+// ✅ technology/page.tsx
 
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
 import LayoutWrapper from '@/app/LayoutWrapper';
-import MainSidebar from '@/components/main_sidebar';
-import MainIntro from '@/components/sections/MainIntro';
-import MainVision from '@/components/sections/MainVision';
-import MainBusiness from '@/components/sections/MainBusiness';
-import MainPartner from '@/components/sections/MainPartner';
-import MainTech from '@/components/sections/MainTech';
+import TechnologySidebar from '@/components/sections/TechnologySidebar';
+import LaweeFeatures from '@/components/sections/LaweeFeatures';
+import LaweeGuide from '@/components/sections/LaweeGuide';
+import LaweeIntro from '@/components/sections/LaweeIntro';
+import LaweePartner from '@/components/sections/LaweePartner';
+import LaweeTech from '@/components/sections/LaweeTech';
 
-const sectionOrder = ['intro', 'vision', 'business', 'partner', 'tech'];
+const sectionOrder = ['features', 'guide', 'technology', 'intro', 'partner'];
 
-export default function MainPage() {
-  const [selected, setSelected] = useState('intro');
+export default function TechnologyPage() {
+  const [selected, setSelected] = useState('features');
   const isScrolling = useRef(false);
 
   useEffect(() => {
@@ -58,14 +58,14 @@ export default function MainPage() {
     <LayoutWrapper>
       <div className="flex">
         <div className="min-w-[160px]">
-          <MainSidebar selected={selected} onSelect={setSelected} />
+          <TechnologySidebar selected={selected} onSelect={setSelected} />
         </div>
         <div className="flex-1 h-screen overflow-hidden">
-          <MainIntro />
-          <MainVision />
-          <MainBusiness />
-          <MainPartner />
-          <MainTech />
+          <LaweeFeatures />
+          <LaweeGuide />
+          <LaweeTech />
+          <LaweeIntro />
+          <LaweePartner />
         </div>
       </div>
     </LayoutWrapper>
