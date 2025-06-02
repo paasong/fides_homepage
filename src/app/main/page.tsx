@@ -1,73 +1,60 @@
-// ✅ src/app/main/page.tsx
-
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import LayoutWrapper from '@/app/LayoutWrapper';
-import MainSidebar from '@/components/main_sidebar';
-import MainIntro from '@/components/sections/MainIntro';
-import MainVision from '@/components/sections/MainVision';
-import MainBusiness from '@/components/sections/MainBusiness';
-import MainPartner from '@/components/sections/MainPartner';
-import MainTech from '@/components/sections/MainTech';
-
-const sectionOrder = ['intro', 'vision', 'business', 'partner', 'tech'];
-
 export default function MainPage() {
-  const [selected, setSelected] = useState('intro');
-  const isScrolling = useRef(false);
-
-  useEffect(() => {
-    const hash = window.location.hash.replace('#', '');
-    if (sectionOrder.includes(hash)) {
-      setSelected(hash);
-      const el = document.getElementById(hash);
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, []);
-
-  useEffect(() => {
-    const handleWheel = (e: WheelEvent) => {
-      if (isScrolling.current) return;
-
-      const currentIndex = sectionOrder.indexOf(selected);
-      let nextIndex = currentIndex;
-
-      if (e.deltaY > 0 && currentIndex < sectionOrder.length - 1) {
-        nextIndex = currentIndex + 1;
-      } else if (e.deltaY < 0 && currentIndex > 0) {
-        nextIndex = currentIndex - 1;
-      }
-
-      if (nextIndex !== currentIndex) {
-        const next = sectionOrder[nextIndex];
-        setSelected(next);
-        const el = document.getElementById(next);
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-        history.replaceState(null, '', `#${next}`);
-        isScrolling.current = true;
-        setTimeout(() => (isScrolling.current = false), 800);
-      }
-    };
-
-    window.addEventListener('wheel', handleWheel, { passive: true });
-    return () => window.removeEventListener('wheel', handleWheel);
-  }, [selected]);
-
   return (
-    <LayoutWrapper>
-      <div className="flex">
-        <div className="min-w-[160px]">
-          <MainSidebar selected={selected} onSelect={setSelected} />
-        </div>
-        <div className="flex-1 h-screen overflow-hidden">
-          <MainIntro />
-          <MainVision />
-          <MainBusiness />
-          <MainPartner />
-          <MainTech />
-        </div>
-      </div>
-    </LayoutWrapper>
+    <main className="relative">
+      {[
+        {
+          id: 'section1',
+          bg: "url('/images/section1.jpg')",
+          content: (
+            <>
+              <h1 className="text-5xl font-bold text-white">We Prove the Power of IR & SR</h1>
+              <p className="text-white mt-4">Scroll down ↓</p>
+            </>
+          ),
+        },
+        {
+          id: 'section2',
+          bg: 'bg-black',
+          content: (
+            <div className="text-white text-4xl font-bold">
+              IR Consulting<br />
+              <div className="mt-4 border-t border-blue-600 w-full" />
+              <div className="mt-4">DX Solution</div>
+            </div>
+          ),
+        },
+        {
+          id: 'section3',
+          bg: 'bg-blue-100',
+          content: <div className="text-4xl font-semibold">Section 3</div>,
+        },
+        {
+          id: 'section4',
+          bg: 'bg-green-100',
+          content: <div className="text-4xl font-semibold">Section 4</div>,
+        },
+        {
+          id: 'section5',
+          bg: 'bg-yellow-100',
+          content: <div className="text-4xl font-semibold">Section 5</div>,
+        },
+        {
+          id: 'section6',
+          bg: 'bg-gray-100',
+          content: <div className="text-4xl font-semibold">Section 6</div>,
+        },
+      ].map((section, index) => (
+        <section
+          key={section.id}
+          id={section.id}
+          className={`h-screen w-full flex items-center justify-center ${section.bg.includes('url') ? '' : section.bg}`}
+          style={section.bg.includes('url') ? { backgroundImage: section.bg, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+        >
+          {section.content}
+        </section>
+      ))}
+    </main>
   );
 }
