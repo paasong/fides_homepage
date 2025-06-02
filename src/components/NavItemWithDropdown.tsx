@@ -1,37 +1,55 @@
 'use client';
 
-import React, { useState } from 'react';
 import Link from 'next/link';
+
+interface DropdownItem {
+  
+  label: string;
+  href: string;
+}
 
 interface NavItemWithDropdownProps {
   title: string;
   href?: string;
-  dropdownItems?: { label: string; href: string }[];
+  dropdownItems?: DropdownItem[];
 }
 
-export default function NavItemWithDropdown({ title, href, dropdownItems }: NavItemWithDropdownProps) {
-  const [isHovered, setIsHovered] = useState(false);
 
+export default function NavItemWithDropdown({
+  title,
+  href,
+  dropdownItems,
+}: NavItemWithDropdownProps) {
   return (
-    <div
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className="relative"
-    >
-      <Link
-        href={href || '#'}
-        className="px-3 py-2 text-sm hover:text-blue-600 whitespace-nowrap"
-      >
-        {title}
-      </Link>
+    <div className="relative inline-block group">
+      <div className="px-2 py-1 cursor-pointer hover:text-blue-600 transition">
+        {href ? (
+          <Link href={href}>
+            {title}
+          </Link>
+        ) : (
+          <span>{title}</span>
+        )}
+      </div>
 
-      {dropdownItems && isHovered && (
-        <div className="absolute top-full left-0 mt-2 bg-white shadow-lg rounded-md py-2 px-4 z-50 flex gap-6 text-sm text-gray-600">
-          {dropdownItems.map((item) => (
-            <Link key={item.label} href={item.href} className="hover:text-blue-600">
-              {item.label}
-            </Link>
-          ))}
+      {dropdownItems && (
+        <div
+          className="absolute left-0 mt-2 w-max bg-white shadow-md rounded text-sm z-50
+                     opacity-0 invisible group-hover:opacity-100 group-hover:visible
+                     transition-all duration-200"
+        >
+          <ul className="py-2 px-1 whitespace-nowrap">
+            {dropdownItems.map((item) => (
+              <li key={item.label}>
+                <Link
+                  href={item.href}
+                  className="block px-4 py-2 hover:bg-gray-100"
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>

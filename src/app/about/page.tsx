@@ -1,19 +1,15 @@
-// ✅ src/app/main/page.tsx
 
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
 import LayoutWrapper from '@/app/LayoutWrapper';
-import MainSidebar from '@/components/main_sidebar';
-import MainIntro from '@/components/sections/MainIntro';
-import MainVision from '@/components/sections/MainVision';
-import MainBusiness from '@/components/sections/MainBusiness';
-import MainPartner from '@/components/sections/MainPartner';
-import MainTech from '@/components/sections/MainTech';
+import AboutSidebar from '@/components/about/AboutSidebar';
+import AboutIntro from '@/components/about/AboutIntro';
+import AboutMap from '@/components/about/AboutMap';
 
-const sectionOrder = ['intro', 'vision', 'business', 'partner', 'tech'];
+const sectionOrder = ['intro', 'map'];
 
-export default function MainPage() {
+export default function AboutPage() {
   const [selected, setSelected] = useState('intro');
   const isScrolling = useRef(false);
 
@@ -58,14 +54,11 @@ export default function MainPage() {
     <LayoutWrapper>
       <div className="flex">
         <div className="min-w-[160px]">
-          <MainSidebar selected={selected} onSelect={setSelected} />
+          <AboutSidebar selected={selected} onSelect={setSelected} />
         </div>
         <div className="flex-1 h-screen overflow-hidden">
-          <MainIntro />
-          <MainVision />
-          <MainBusiness />
-          <MainPartner />
-          <MainTech />
+          <AboutIntro />
+          <AboutMap />
         </div>
       </div>
     </LayoutWrapper>
