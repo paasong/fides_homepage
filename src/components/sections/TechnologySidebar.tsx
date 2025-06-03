@@ -13,10 +13,10 @@ export default function TechnologySidebar({
   onSelect: (value: string) => void;
 }) {
   const items: SidebarItem[] = [
-    { label: 'Lawee 소개', value: 'features' },
-    { label: '주요 기능', value: 'guide' },
+    { label: 'Lawee 소개', value: 'intro' },
+    { label: '주요 기능', value: 'features' },
     { label: '특화 기술', value: 'technology' },
-    { label: '도입 안내', value: 'intro' },
+    { label: '도입 안내', value: 'guide' },
     { label: '제휴 안내', value: 'partner' },
   ];
 
