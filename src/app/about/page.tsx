@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -13,6 +12,7 @@ export default function AboutPage() {
   const [selected, setSelected] = useState('intro');
   const isScrolling = useRef(false);
 
+  // 초기 hash 이동 처리
   useEffect(() => {
     const hash = window.location.hash.replace('#', '');
     if (sectionOrder.includes(hash)) {
@@ -22,6 +22,7 @@ export default function AboutPage() {
     }
   }, []);
 
+  // 휠 이벤트로 부드러운 섹션 이동
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
       if (isScrolling.current) return;
@@ -37,26 +38,36 @@ export default function AboutPage() {
 
       if (nextIndex !== currentIndex) {
         const next = sectionOrder[nextIndex];
-        setSelected(next);
         const el = document.getElementById(next);
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-        history.replaceState(null, '', `#${next}`);
-        isScrolling.current = true;
-        setTimeout(() => (isScrolling.current = false), 800);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+          history.replaceState(null, '', `#${next}`);
+          setSelected(next);
+          isScrolling.current = true;
+          setTimeout(() => (isScrolling.current = false), 800);
+        }
       }
     };
 
-    window.addEventListener('wheel', handleWheel, { passive: true });
+    window.addEventListener('wheel', handleWheel, { passive: false });
     return () => window.removeEventListener('wheel', handleWheel);
   }, [selected]);
 
   return (
     <LayoutWrapper>
-      <div className="flex">
-        <div className="min-w-[160px]">
-          <AboutSidebar selected={selected} onSelect={setSelected} />
+      <div className="flex w-full">
+        {/* ✅ 왼쪽 고정 사이드바 */}
+        <div className="fixed top-28 left-0 h-[calc(100vh-7rem)] w-[160px] bg-white z-50 px-4 py-4">
+          <AboutSidebar selected={selected} onSelect={(value) => {
+            setSelected(value);
+            const el = document.getElementById(value);
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+            history.replaceState(null, '', `#${value}`);
+          }} />
         </div>
-        <div className="flex-1 h-screen overflow-hidden">
+
+        {/* ✅ 본문 영역은 좌측 여백 확보 */}
+        <div className="w-full pl-[160px]">
           <AboutIntro />
           <AboutMap />
         </div>
