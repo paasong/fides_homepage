@@ -16,7 +16,7 @@ export default function Header() {
       title: '회사소개',
       dropdownItems: [
         { label: '회사소개', href: '/about#about' },
-    { label: '오시는 길', href: '/about#map' },
+        { label: '오시는 길', href: '/about#map' },
       ],
     },
     {
@@ -24,15 +24,15 @@ export default function Header() {
       
       dropdownItems: [
         { label: 'LAWEE 소개', href: '/technology#intro' },
-    { label: '주요 기능', href: '/technology#features' },
-    { label: '특화 기술', href: '/technology#technology' },
-    { label: '도입 안내', href: '/technology#guide' },
-    { label: '제휴 안내', href: '/technology#partner' },
+        { label: '주요 기능', href: '/technology#features' },
+        { label: '특화 기술', href: '/technology#technology' },
+        { label: '도입 안내', href: '/technology#guide' },
+        { label: '제휴 안내', href: '/technology#partner' },
       ],
     },
     {
       title: '특허 및 인증',
-      href: '/main/patent',
+      href: '/patent',
     },
   ];
 
@@ -66,8 +66,8 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 w-full bg-white border-b">
       <div className="max-w-screen-xl mx-auto px-4 py-3 flex justify-between items-center">
-        <Link href="/" className="text-xl font-bold text-blue-700">
-          IR<span className="text-black">KUDOS</span>
+        <Link href="/main" className="text-xl font-bold text-blue-700">
+          <span className="text-blue">FIDES</span>
         </Link>
 
         <nav className="hidden md:flex gap-8 items-center text-sm text-gray-800">

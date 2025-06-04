@@ -15,7 +15,8 @@ const sectionOrder = [
   'intro1', 'intro2',
   'features1', 'features2',
   'technology1', 'technology2', 'technology3',
-  'guide', 'partner'
+  'guide1', 'guide2', 
+  'partner1', 'partner2'
 ];
 
 export default function TechnologyPage() {
@@ -32,6 +33,8 @@ export default function TechnologyPage() {
         if (id.startsWith('technology')) setSelected('technology');
         else if (id.startsWith('features')) setSelected('features');
         else if (id.startsWith('intro')) setSelected('intro');
+        else if (id.startsWith('guide')) setSelected('guide');
+        else if (id.startsWith('partner')) setSelected('partner');
         else setSelected(id);
       }
     }, { threshold: 0.5 });
@@ -46,17 +49,7 @@ export default function TechnologyPage() {
       const currentId = currentSection.current;
       const currentEl = document.getElementById(currentId);
       if (!currentEl) return;
-
-      // 내부 스크롤 허용 처리
-      if (['technology1', 'technology2', 'technology3', 'features1', 'features2', 'intro1', 'intro2'].includes(currentId)) {
-        const atTop = Math.ceil(currentEl.scrollTop) === 0;
-        const atBottom = Math.ceil(currentEl.scrollTop + currentEl.clientHeight) >= currentEl.scrollHeight;
-
-        if ((e.deltaY > 0 && !atBottom) || (e.deltaY < 0 && !atTop)) {
-          return; // 내부 스크롤 중 - 휠 기본 동작 허용
-        }
-      }
-
+      
       e.preventDefault();
       if (isScrolling.current) return;
 
@@ -70,7 +63,7 @@ export default function TechnologyPage() {
       if (el) {
         el.scrollIntoView({ behavior: 'smooth' });
         isScrolling.current = true;
-        setTimeout(() => (isScrolling.current = false), 800);
+        setTimeout(() => (isScrolling.current = false), 500);
       }
     };
 
@@ -96,8 +89,8 @@ export default function TechnologyPage() {
           <LaweeIntro />
           <LaweeFeatures />
           <LaweeTech />
-          <section id="guide" className="h-screen w-full bg-yellow-100 flex items-center justify-center text-4xl">도입 안내</section>
-          <section id="partner" className="h-screen w-full bg-yellow-200 flex items-center justify-center text-4xl">제휴 안내</section>
+          <LaweeGuide />
+          <LaweePartner />        
         </div>
       </div>
     </LayoutWrapper>
