@@ -1,4 +1,4 @@
-// ✅ technology/page.tsx
+// ✅ page.tsx (최종 수정 - 내부 스크롤 허용 및 외부 smooth 처리)
 
 'use client';
 
@@ -11,61 +11,93 @@ import LaweeIntro from '@/components/sections/LaweeIntro';
 import LaweePartner from '@/components/sections/LaweePartner';
 import LaweeTech from '@/components/sections/LaweeTech';
 
-const sectionOrder = ['features', 'guide', 'technology', 'intro', 'partner'];
+const sectionOrder = [
+  'intro1', 'intro2',
+  'features1', 'features2',
+  'technology1', 'technology2', 'technology3',
+  'guide', 'partner'
+];
 
 export default function TechnologyPage() {
-  const [selected, setSelected] = useState('features');
+  const [selected, setSelected] = useState('intro');
+  const currentSection = useRef('intro1');
   const isScrolling = useRef(false);
 
   useEffect(() => {
-    const hash = window.location.hash.replace('#', '');
-    if (sectionOrder.includes(hash)) {
-      setSelected(hash);
-      const el = document.getElementById(hash);
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-    }
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.find((e) => e.isIntersecting);
+      if (visible) {
+        const id = visible.target.id;
+        currentSection.current = id;
+        if (id.startsWith('technology')) setSelected('technology');
+        else if (id.startsWith('features')) setSelected('features');
+        else if (id.startsWith('intro')) setSelected('intro');
+        else setSelected(id);
+      }
+    }, { threshold: 0.5 });
+
+    const els = document.querySelectorAll('[id]');
+    els.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
-      if (isScrolling.current) return;
+      const currentId = currentSection.current;
+      const currentEl = document.getElementById(currentId);
+      if (!currentEl) return;
 
-      const currentIndex = sectionOrder.indexOf(selected);
-      let nextIndex = currentIndex;
+      // 내부 스크롤 허용 처리
+      if (['technology1', 'technology2', 'technology3', 'features1', 'features2', 'intro1', 'intro2'].includes(currentId)) {
+        const atTop = Math.ceil(currentEl.scrollTop) === 0;
+        const atBottom = Math.ceil(currentEl.scrollTop + currentEl.clientHeight) >= currentEl.scrollHeight;
 
-      if (e.deltaY > 0 && currentIndex < sectionOrder.length - 1) {
-        nextIndex = currentIndex + 1;
-      } else if (e.deltaY < 0 && currentIndex > 0) {
-        nextIndex = currentIndex - 1;
+        if ((e.deltaY > 0 && !atBottom) || (e.deltaY < 0 && !atTop)) {
+          return; // 내부 스크롤 중 - 휠 기본 동작 허용
+        }
       }
 
-      if (nextIndex !== currentIndex) {
-        const next = sectionOrder[nextIndex];
-        setSelected(next);
-        const el = document.getElementById(next);
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-        history.replaceState(null, '', `#${next}`);
+      e.preventDefault();
+      if (isScrolling.current) return;
+
+      const currentIndex = sectionOrder.indexOf(currentId);
+      let nextIndex = currentIndex;
+      if (e.deltaY > 0 && currentIndex < sectionOrder.length - 1) nextIndex++;
+      if (e.deltaY < 0 && currentIndex > 0) nextIndex--;
+
+      const next = sectionOrder[nextIndex];
+      const el = document.getElementById(next);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
         isScrolling.current = true;
         setTimeout(() => (isScrolling.current = false), 800);
       }
     };
 
-    window.addEventListener('wheel', handleWheel, { passive: true });
+    window.addEventListener('wheel', handleWheel, { passive: false });
     return () => window.removeEventListener('wheel', handleWheel);
-  }, [selected]);
+  }, []);
 
   return (
     <LayoutWrapper>
-      <div className="flex">
-        <div className="min-w-[160px]">
-          <TechnologySidebar selected={selected} onSelect={setSelected} />
+      <div className="flex w-full">
+        <div className="fixed top-28 left-0 h-[calc(100vh-7rem)] w-[160px] bg-white z-50 p-4">
+          <TechnologySidebar
+            selected={selected}
+            onSelect={(value) => {
+              const id = value === 'technology' ? 'technology1' : value + '1';
+              const el = document.getElementById(id);
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }}
+          />
         </div>
-        <div className="flex-1 h-screen overflow-hidden">
-          <LaweeFeatures />
-          <LaweeGuide />
-          <LaweeTech />
+
+        <div className="w-full pl-[160px]">
           <LaweeIntro />
-          <LaweePartner />
+          <LaweeFeatures />
+          <LaweeTech />
+          <section id="guide" className="h-screen w-full bg-yellow-100 flex items-center justify-center text-4xl">도입 안내</section>
+          <section id="partner" className="h-screen w-full bg-yellow-200 flex items-center justify-center text-4xl">제휴 안내</section>
         </div>
       </div>
     </LayoutWrapper>
